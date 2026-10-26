@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OAG MA 2570 — Apple Infographic & Interactive ER/DR Dashboard</title>
+  <style>
+    /* ==========================================================================
+       APPLE BENTO DESIGN SYSTEM + 100% PURE CSS STATE MACHINE (NO JS REQUIRED)
+       ========================================================================== */
+    :root {
+      --bg-page: #f5f5f7;
+      --bg-card: #ffffff;
+      --bg-subtle: rgba(120, 120, 128, 0.06);
+      --bg-glass: rgba(255, 255, 255, 0.82);
+      --text-main: #1d1d1f;
+      --text-sub: #6e6e73;
+      --apple-blue: #0071e3;
+      --apple-blue-soft: rgba(0, 113, 227, 0.1);
+      --apple-indigo: #5e5ce6;
+      --apple-purple: #bf5af2;
+      --apple-pink: #ff375f;
+      --apple-orange: #ff9f0a;
+      --apple-green: #28cd41;
+      --apple-teal: #5ac8fa;
+      --border-soft: rgba(0, 0, 0, 0.08);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow-bento: 0 8px 28px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+      --shadow-hover: 0 14px 36px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Sarabun', 'Segoe UI', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Hidden state inputs for Pure CSS interactivity */
+    .state-radio,
+    .state-check {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+    }
+
+    /* Dark Mode via Pure CSS Checkbox (#theme-dark:checked) */
+    #theme-dark:checked ~ .app-shell {
+      --bg-page: #000000;
+      --bg-card: #1c1c1e;
+      --bg-subtle: rgba(255, 255, 255, 0.07);
+      --bg-glass: rgba(28, 28, 30, 0.85);
+      --text-main: #f5f5f7;
+      --text-sub: #a1a1a6;
+      --apple-blue-soft: rgba(100, 210, 255, 0.16);
+      --border-soft: rgba(255, 255, 255, 0.12);
+      --shadow-bento: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Large Font Presentation Mode via Pure CSS Checkbox (#font-large:checked) */
+    #font-large:checked ~ .app-shell {
+      font-size: 112%;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      transition: background-color 0.25s ease, color 0.25s ease;
+      padding-bottom: 4rem;
+    }
+
+    /* Sticky Frosted Glass Header */
+    .apple-nav {
+      position: sticky;
+      top: 0;
+      z-index: 300;
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      background: var(--bg-glass);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .nav-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #0071e3, #5e5ce6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+      flex-shrink: 0;
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 0.3rem;
+      overflow-x: auto;
+      padding: 0.25rem;
+      background: rgba(120, 120, 128, 0.12);
+      border-radius: 999px;
+      max-width: 100%;
+    }
+
+    .pill-tab {
+      color: var(--text-sub);
+      padding: 0.48rem 0.95rem;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      user-select: none;
+    }
+
+    .pill-tab:hover {
+      color: var(--text-main);
+    }
+
+    .dot-live {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--apple-pink);
+      box-shadow: 0 0 8px var(--apple-pink);
+      display: inline-block;
+    }
+
+    /* Active Tab Styling via Pure CSS :checked */
+    #nav-tab-1:checked ~ .app-shell .apple-nav label[for="nav-tab-1"],
+    #nav-tab-2:checked ~ .app-shell .apple-nav label[for="nav-tab-2"],
+    #nav-tab-3:checked ~ .app-shell .apple-nav label[for="nav-tab-3"],
+    #nav-tab-4:checked ~ .app-shell .apple-nav label[for="nav-tab-4"],
+    #nav-tab-5:checked ~ .app-shell .apple-nav label[for="nav-tab-5"],
+    #nav-tab-6:checked ~ .app-shell .apple-nav label[for="nav-tab-6"],
+    #nav-tab-all:checked ~ .app-shell .apple-nav label[for="nav-tab-all"] {
+      background: var(--bg-card);
+      color: var(--apple-blue);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      font-weight: 700;
+    }
+
+    /* Tab Content Visibility via Pure CSS :checked */
+    .tab-view {
+      display: none;
+      animation: fadeUp 0.3s ease;
+    }
+
+    #nav-tab-1:checked ~ .app-shell #view-1,
+    #nav-tab-2:checked ~ .app-shell #view-2,
+    #nav-tab-3:checked ~ .app-shell #view-3,
+    #nav-tab-4:checked ~ .app-shell #view-4,
+    #nav-tab-5:checked ~ .app-shell #view-5,
+    #nav-tab-6:checked ~ .app-shell #view-6 {
+      display: block;
+    }
+
+    /* Show all tabs together when "ดูทั้งหมด" is clicked */
+    #nav-tab-all:checked ~ .app-shell .tab-view {
+      display: block;
+      margin-bottom: 2.25rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .apple-btn {
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-main);
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      user-select: none;
+    }
+
+    .apple-btn:hover {
+      border-color: var(--apple-blue);
+      color: var(--apple-blue);
+    }
+
+    #theme-dark:checked ~ .app-shell label[for="theme-dark"],
+    #font-large:checked ~ .app-shell label[for="font-large"] {
+      background: var(--apple-blue);
+      color: #ffffff;
+      border-color: var(--apple-blue);
+    }
+
+    /* Hero Section */
+    .apple-hero {
+      max-width: 1440px;
+      margin: 1.5rem auto 1.2rem;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--apple-blue);
+      background: var(--apple-blue-soft);
+      padding: 0.28rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-headline {
+      font-size: clamp(1.65rem, 2.8vw, 2.45rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(90deg, var(--text-main) 0%, #0071e3 55%, #5e5ce6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.35rem;
+    }
+
+    .hero-sub {
+      color: var(--text-sub);
+      font-size: 0.96rem;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    /* Main Container & Bento Grid */
+    .main-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .bento-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-xl);
+      padding: 1.55rem;
+      box-shadow: var(--shadow-bento);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .bento-card.dark-pro {
+      background: linear-gradient(145deg, #1d1d1f 0%, #0f172a 100%);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .bento-card.dark-pro .bento-sub { color: #a1a1a6; }
+
+    .bento-card.blue-grad {
+      background: linear-gradient(135deg, #0071e3 0%, #3a3897 100%);
+      color: #ffffff;
+    }
+
+    .bento-card.blue-grad .bento-sub { color: rgba(255, 255, 255, 0.85); }
+
+    .col-3 { grid-column: span 3; }
+    .col-4 { grid-column: span 4; }
+    .col-5 { grid-column: span 5; }
+    .col-6 { grid-column: span 6; }
+    .col-7 { grid-column: span 7; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+
+    .bento-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--apple-blue);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .dark-pro .bento-label { color: var(--apple-teal); }
+    .blue-grad .bento-label { color: #fde68a; }
+
+    .bento-big-num {
+      font-size: clamp(1.8rem, 2.5vw, 2.45rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      margin: 0.2rem 0 0.4rem;
+    }
+
+    .bento-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.35rem;
+    }
+
+    .bento-sub {
+      font-size: 0.86rem;
+      color: var(--text-sub);
+    }
+
+    /* Visual Rings */
+    .ring-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 0.85rem 0;
+    }
+
+    .ring-widget {
+      text-align: center;
+      flex: 1;
+      min-width: 125px;
+    }
+
+    .ring-svg {
+      width: 108px;
+      height: 108px;
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: rgba(120, 120, 128, 0.16);
+      stroke-width: 10;
+    }
+
+    .ring-progress {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+    }
+
+    .ring-center-label {
+      margin-top: -73px;
+      margin-bottom: 32px;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    /* Infographic Step Cards */
+    .infographic-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 0.95rem;
+      margin-top: 0.95rem;
+    }
+
+    .info-node {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 1.15rem;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .info-node:hover {
+      border-color: var(--apple-blue);
+      transform: translateY(-2px);
+    }
+
+    .info-icon-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      margin: 0 auto 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .tag-blue { background: rgba(0, 113, 227, 0.12); color: #0071e3; }
+    .tag-green { background: rgba(40, 205, 65, 0.15); color: #198728; }
+    .tag-orange { background: rgba(255, 159, 10, 0.16); color: #b86b00; }
+    .tag-pink { background: rgba(255, 55, 95, 0.14); color: #d61f4b; }
+    .tag-purple { background: rgba(191, 90, 242, 0.15); color: #7e22ce; }
+
+    /* ==========================================================================
+       TAB 2: PURE CSS INTERACTIVE ER / DR DIAGRAM
+       ========================================================================== */
+    .diagram-stage {
+      background: #0d1117;
+      border-radius: var(--radius-xl);
+      padding: 1.6rem;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+      margin-bottom: 1.35rem;
+    }
+
+    .diagram-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.15rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .chip-label {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #e2e8f0;
+      padding: 0.42rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .chip-label:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* Active ER Line Filter via Pure CSS :checked */
+    #er-f-all:checked ~ .diagram-stage label[for="er-f-all"],
+    #er-f-asset:checked ~ .diagram-stage label[for="er-f-asset"],
+    #er-f-sla:checked ~ .diagram-stage label[for="er-f-sla"],
+    #er-f-pay:checked ~ .diagram-stage label[for="er-f-pay"] {
+      background: var(--apple-blue);
+      border-color: var(--apple-blue);
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(0, 113, 227, 0.65);
+    }
+
+    .er-svg-wrap {
+      width: 100%;
+      overflow-x: auto;
+      background: radial-gradient(circle at center, #162032 0%, #090d16 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+    }
+
+    .er-edge {
+      fill: none;
+      stroke-width: 2.8;
+      stroke-dasharray: 7 4;
+      animation: dashFlow 16s linear infinite;
+      transition: opacity 0.25s ease, stroke-width 0.25s ease;
+    }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -160; }
+    }
+
+    /* Pure CSS Line Filtering */
+    #er-f-asset:checked ~ .diagram-stage .er-edge:not(.edge-asset) { opacity: 0.12; stroke-width: 1.2; }
+    #er-f-asset:checked ~ .diagram-stage .er-edge.edge-asset { opacity: 1; stroke-width: 3.8; }
+
+    #er-f-sla:checked ~ .diagram-stage .er-edge:not(.edge-sla) { opacity: 0.12; stroke-width: 1.2; }
+    #er-f-sla:checked ~ .diagram-stage .er-edge.edge-sla { opacity: 1; stroke-width: 3.8; }
+
+    #er-f-pay:checked ~ .diagram-stage .er-edge:not(.edge-pay) { opacity: 0.12; stroke-width: 1.2; }
+    #er-f-pay:checked ~ .diagram-stage .er-edge.edge-pay { opacity: 1; stroke-width: 3.8; }
+
+    /* Pure CSS Node Selector Buttons */
+    .node-selector-bar {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      margin: 1rem 0 0.75rem;
+    }
+
+    .node-pill {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #cbd5e1;
+      padding: 0.45rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .node-pill:hover {
+      border-color: #64d2ff;
+      color: #ffffff;
+    }
+
+    #en-0:checked ~ .diagram-stage label[for="en-0"],
+    #en-1:checked ~ .diagram-stage label[for="en-1"],
+    #en-2:checked ~ .diagram-stage label[for="en-2"],
+    #en-3:checked ~ .diagram-stage label[for="en-3"],
+    #en-4:checked ~ .diagram-stage label[for="en-4"],
+    #en-5:checked ~ .diagram-stage label[for="en-5"],
+    #en-6:checked ~ .diagram-stage label[for="en-6"] {
+      background: #0071e3;
+      border-color: #64d2ff;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(100, 210, 255, 0.45);
+    }
+
+    .er-detail-card {
+      display: none;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(100, 210, 255, 0.28);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1.25rem;
+      align-items: center;
+    }
+
+    #en-0:checked ~ .diagram-stage #er-card-0,
+    #en-1:checked ~ .diagram-stage #er-card-1,
+    #en-2:checked ~ .diagram-stage #er-card-2,
+    #en-3:checked ~ .diagram-stage #er-card-3,
+    #en-4:checked ~ .diagram-stage #er-card-4,
+    #en-5:checked ~ .diagram-stage #er-card-5,
+    #en-6:checked ~ .diagram-stage #er-card-6 {
+      display: grid;
+    }
+
+    /* Hardware Visual Cards */
+    .hw-visual-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      gap: 1.1rem;
+      align-items: center;
+    }
+
+    .hw-illu {
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-bento);
+    }
+
+    /* ==========================================================================
+       TAB 4: PURE CSS SLA & PENALTY INTERACTIVE SELECTORS
+       ========================================================================== */
+    .scenario-pills {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.6rem;
+      margin: 0.9rem 0 1.2rem;
+    }
+
+    .scen-label {
+      padding: 0.75rem 0.95rem;
+      border-radius: 14px;
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--border-soft);
+      cursor: pointer;
+      font-size: 0.84rem;
+      font-weight: 700;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .scen-label:hover {
+      border-color: var(--apple-blue);
+    }
+
+    #sla-s1:checked ~ .bento-grid label[for="sla-s1"],
+    #sla-s2:checked ~ .bento-grid label[for="sla-s2"],
+    #sla-s3:checked ~ .bento-grid label[for="sla-s3"],
+    #sla-s4:checked ~ .bento-grid label[for="sla-s4"],
+    #sla-s5:checked ~ .bento-grid label[for="sla-s5"],
+    #sla-s6:checked ~ .bento-grid label[for="sla-s6"] {
+      background: var(--apple-blue);
+      color: #ffffff;
+      border-color: var(--apple-blue);
+      box-shadow: 0 6px 16px rgba(0, 113, 227, 0.28);
+    }
+
+    .sla-result-pane {
+      display: none;
+    }
+
+    #sla-s1:checked ~ .bento-grid #sla-pane-1,
+    #sla-s2:checked ~ .bento-grid #sla-pane-2,
+    #sla-s3:checked ~ .bento-grid #sla-pane-3,
+    #sla-s4:checked ~ .bento-grid #sla-pane-4,
+    #sla-s5:checked ~ .bento-grid #sla-pane-5,
+    #sla-s6:checked ~ .bento-grid #sla-pane-6 {
+      display: block;
+    }
+
+    /* Pure CSS Penalty Selector Pills */
+    .pen-pills {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.5rem;
+      margin: 0.85rem 0 1.1rem;
+    }
+
+    .pen-label {
+      padding: 0.55rem 0.7rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #e2e8f0;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    #pen-1:checked ~ .bento-grid label[for="pen-1"],
+    #pen-2:checked ~ .bento-grid label[for="pen-2"],
+    #pen-3:checked ~ .bento-grid label[for="pen-3"],
+    #pen-5:checked ~ .bento-grid label[for="pen-5"],
+    #pen-10:checked ~ .bento-grid label[for="pen-10"],
+    #pen-sub:checked ~ .bento-grid label[for="pen-sub"] {
+      background: var(--apple-pink);
+      border-color: #fda4af;
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(255, 55, 95, 0.5);
+    }
+
+    .pen-pane {
+      display: none;
+      background: rgba(255, 55, 95, 0.16);
+      border: 1px solid #ff375f;
+      border-radius: 18px;
+      padding: 1.15rem;
+    }
+
+    #pen-1:checked ~ .bento-grid #pen-box-1,
+    #pen-2:checked ~ .bento-grid #pen-box-2,
+    #pen-3:checked ~ .bento-grid #pen-box-3,
+    #pen-5:checked ~ .bento-grid #pen-box-5,
+    #pen-10:checked ~ .bento-grid #pen-box-10,
+    #pen-sub:checked ~ .bento-grid #pen-box-sub {
+      display: block;
+    }
+
+    /* ==========================================================================
+       TAB 6: PURE CSS COUNTER FOR MEETING AGENDA CHECKLIST
+       ========================================================================== */
+    .agenda-counter-scope {
+      counter-reset: done-items;
+    }
+
+    .apple-check-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding: 0.95rem 1.2rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-soft);
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .apple-check-card:hover {
+      border-color: var(--apple-blue);
+    }
+
+    .apple-check-card input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      margin-top: 0.15rem;
+      accent-color: var(--apple-green);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .apple-check-card input[type="checkbox"]:checked {
+      counter-increment: done-items;
+    }
+
+    .apple-check-card:has(input:checked) {
+      background: rgba(40, 205, 65, 0.12);
+      border-color: var(--apple-green);
+    }
+
+    .css-live-counter::after {
+      content: "ตรวจแล้ว " counter(done-items) " / 16 รายการ";
+    }
+
+    /* Tables */
+    .clean-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin-top: 0.75rem;
+    }
+
+    .clean-table th,
+    .clean-table td {
+      padding: 0.7rem 0.9rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .clean-table th {
+      font-weight: 700;
+      color: var(--text-sub);
+      background: var(--bg-subtle);
+    }
+
+    @media (max-width: 1024px) {
+      .col-3, .col-4, .col-5, .col-6, .col-7, .col-8 {
+        grid-column: span 12;
+      }
+      .er-detail-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       GLOBAL PURE CSS STATE INPUTS (WORKS 100% WITHOUT JAVASCRIPT)
+       ======================================================================== -->
+  <input type="radio" name="main-nav" id="nav-tab-1" class="state-radio" checked>
+  <input type="radio" name="main-nav" id="nav-tab-2" class="state-radio">
+  <input type="radio" name="main-nav" id="nav-tab-3" class="state-radio">
+  <input type="radio" name="main-nav" id="nav-tab-4" class="state-radio">
+  <input type="radio" name="main-nav" id="nav-tab-5" class="state-radio">
+  <input type="radio" name="main-nav" id="nav-tab-6" class="state-radio">
+  <input type="radio" name="main-nav" id="nav-tab-all" class="state-radio">
+
+  <input type="checkbox" id="theme-dark" class="state-check">
+  <input type="checkbox" id="font-large" class="state-check">
+
+  <div class="app-shell">
+
+    <!-- Sticky Apple Frosted Glass Navigation -->
+    <header class="apple-nav">
+      <div class="nav-inner">
+        <div class="brand-logo">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:0.95rem; font-weight:800;">OAG MA 2570</div>
+            <div style="font-size:0.72rem; color:var(--text-sub);">สำนักงานอัยการสูงสุด • Visual Infographic</div>
+          </div>
+        </div>
+
+        <!-- Pure CSS Clickable Tab Labels -->
+        <nav class="nav-pills">
+          <label for="nav-tab-1" class="pill-tab">✨ 1. Bento Infographic</label>
+          <label for="nav-tab-2" class="pill-tab"><span class="dot-live"></span> 🔗 2. ER / DR Diagram (ผังเชื่อมโยงข้อมูล)</label>
+          <label for="nav-tab-3" class="pill-tab">🖥️ 3. ครุภัณฑ์ & ระบบ 4 มิติ</label>
+          <label for="nav-tab-4" class="pill-tab">⏱️ 4. SLA & จำลองค่าปรับ</label>
+          <label for="nav-tab-5" class="pill-tab">👥 5. ทีมผู้เชี่ยวชาญ (ผนวก ก)</label>
+          <label for="nav-tab-6" class="pill-tab">📋 6. วาระตรวจรับพัสดุ</label>
+          <label for="nav-tab-all" class="pill-tab">📑 ดูทุกหน้าพร้อมกัน</label>
+        </nav>
+
+        <div class="nav-controls">
+          <label for="theme-dark" class="apple-btn">🌗 สลับโหมดมืด/สว่าง</label>
+          <label for="font-large" class="apple-btn">🔍 ตัวอักษรใหญ่</label>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Title Banner -->
+    <section class="apple-hero">
+      <div class="eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Terms of Reference : ประจำปีงบประมาณ พ.ศ. 2570 (1 ต.ค. 2569 – 30 ก.ย. 2570)
+      </div>
+      <h1 class="hero-headline">บำรุงรักษาระบบคอมพิวเตอร์ เครือข่าย และซอฟต์แวร์ทั่วประเทศ</h1>
+      <p class="hero-sub">คลิกเลือกแถบเมนูด้านบนเพื่อสลับดู Infographic รายหมวดหมู่ ผังเชื่อมโยงข้อมูล ER/DR Diagram เกณฑ์เวลา SLA และวาระการประชุมคณะกรรมการตรวจรับพัสดุ</p>
+    </section>
+
+    <!-- Main Container -->
+    <main class="main-container">
+
+      <!-- ====================================================================
+           TAB 1: APPLE BENTO INFOGRAPHIC OVERVIEW
+           ==================================================================== -->
+      <section class="tab-view" id="view-1">
+        <div class="bento-grid">
+
+          <!-- Budget Card -->
+          <div class="bento-card dark-pro col-5">
+            <div>
+              <div class="bento-label">💰 วงเงินงบประมาณจัดสรร (ข้อ 7–8)</div>
+              <div class="bento-big-num" style="color:#5ac8fa;">21,812,971.94 ฿</div>
+              <p class="bento-sub">พิจารณาตัดสินด้วย <strong>หลักเกณฑ์ราคา (Price Criteria)</strong> จากราคารวมทั้งสิ้น (รวมภาษีมูลค่าเพิ่มและค่าใช้จ่ายทั้งปวง)</p>
+            </div>
+            <div style="margin-top:1.25rem; display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+              <div style="background:rgba(255,255,255,0.08); padding:0.85rem; border-radius:16px;">
+                <div style="font-size:0.75rem; color:#a1a1a6;">การส่งมอบ & จ่ายเงิน (ข้อ 6, 9)</div>
+                <div style="font-size:1.22rem; font-weight:800; color:#28cd41;">12 งวดรายเดือน</div>
+                <div style="font-size:0.72rem; color:#a1a1a6;">เฉลี่ย ~1,817,747.66 ฿/งวด</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.08); padding:0.85rem; border-radius:16px;">
+                <div style="font-size:0.75rem; color:#a1a1a6;">ค่าปรับผิดสัญญา (ข้อ 10)</div>
+                <div style="font-size:1.22rem; font-weight:800; color:#ff375f;">0.10% ต่อวัน</div>
+                <div style="font-size:0.72rem; color:#a1a1a6;">21,812.97 ฿/วัน (เศษชม.=1วัน)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Radial Ring Hardware Breakdown -->
+          <div class="bento-card col-7">
+            <div>
+              <div class="bento-label">🖥️ สัดส่วนครุภัณฑ์ที่ดูแลทั่วประเทศ (ภาคผนวก ข)</div>
+              <div class="bento-title">รวมทั้งสิ้น 4,739 หน่วย แบ่งเป็น 3 หมวดหลัก</div>
+            </div>
+
+            <div class="ring-row">
+              <div class="ring-widget">
+                <svg class="ring-svg" viewBox="0 0 120 120">
+                  <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                  <circle class="ring-progress" cx="60" cy="60" r="48" stroke="#0071e3" stroke-dasharray="301.6" stroke-dashoffset="56.6"/>
+                </svg>
+                <div class="ring-center-label" style="color:#0071e3;">3,849</div>
+                <div style="font-weight:700; font-size:0.9rem;">เครื่องลูกข่าย AIO</div>
+                <div class="bento-sub">81.22% • ทั่วประเทศ</div>
+              </div>
+
+              <div class="ring-widget">
+                <svg class="ring-svg" viewBox="0 0 120 120">
+                  <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                  <circle class="ring-progress" cx="60" cy="60" r="48" stroke="#5e5ce6" stroke-dasharray="301.6" stroke-dashoffset="245.2"/>
+                </svg>
+                <div class="ring-center-label" style="color:#5e5ce6;">885</div>
+                <div style="font-weight:700; font-size:0.9rem;">อุปกรณ์เครือข่าย</div>
+                <div class="bento-sub">18.67% • Switch & AP</div>
+              </div>
+
+              <div class="ring-widget">
+                <svg class="ring-svg" viewBox="0 0 120 120">
+                  <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                  <circle class="ring-progress" cx="60" cy="60" r="48" stroke="#ff375f" stroke-dasharray="301.6" stroke-dashoffset="285"/>
+                </svg>
+                <div class="ring-center-label" style="color:#ff375f;">5</div>
+                <div style="font-weight:700; font-size:0.9rem;">เครื่องแม่ข่ายหลัก</div>
+                <div class="bento-sub">Data Center (Firewall/VPN)</div>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; gap:0.5rem; flex-wrap:wrap; padding-top:0.5rem; border-top:1px solid var(--border-soft); font-size:0.8rem; color:var(--text-sub);">
+              <span>🛡️ <strong>FortiGate 400F (2)</strong> ต่อ License ล่วงหน้า ≥ 1 เดือน</span>
+              <span>📺 <strong>Switch 518 ตัว</strong> แสดงผลบนจอ Smart TV ≥ 50"</span>
+              <span>🏷️ <strong>ติด QR Sticker สีขาว</strong> ทุกครุภัณฑ์ (ข้อ 5.36)</span>
+            </div>
+          </div>
+
+          <!-- 6-Step Sequential TOR Infographic -->
+          <div class="bento-card col-12">
+            <div>
+              <div class="bento-label">🧭 ลำดับสาระสำคัญ TOR ตามไทม์ไลน์ (ข้อ 1 – ข้อ 12)</div>
+              <div class="bento-title">6 จุดควบคุมสำคัญตั้งแต่การคัดเลือกผู้ยื่นข้อเสนอจนถึงการตรวจรับงวดสุดท้าย</div>
+            </div>
+
+            <div class="infographic-steps">
+              <div class="info-node">
+                <div class="info-icon-circle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                </div>
+                <span class="tag-pill tag-blue">ข้อ 1 – 4</span>
+                <h4 style="margin:0.4rem 0 0.25rem; font-size:0.95rem;">คุณสมบัติ & ยื่นซอง</h4>
+                <p class="bento-sub">ISO 9001:2015, งบการเงินบวก หรือทุนจดทะเบียนชำระแล้ว ≥ 8 ลบ. (สินเชื่อ 1/4 ของงบ) ยืนราคา ≥ 120 วัน</p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff9f0a" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <span class="tag-pill tag-orange">ข้อ 5.1 – 5.5, 11</span>
+                <h4 style="margin:0.4rem 0 0.25rem; font-size:0.95rem;">ภายใน 15 วันแรก</h4>
+                <p class="bento-sub">ส่งแผนทำงาน/PM/DR Plan (≥2 ชุด), ส่งประวัติบุคลากร ≥8 คนหลัก+สำรอง, ส่งแผนพัสดุผลิตในไทย</p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5e5ce6" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <span class="tag-pill tag-purple">ข้อ 5.6 – 5.10, 5.36</span>
+                <h4 style="margin:0.4rem 0 0.25rem; font-size:0.95rem;">เปิด 4 ระบบ & จอ 50"</h4>
+                <p class="bento-sub">Web Helpdesk, ฐานข้อมูลครุภัณฑ์, ระบบโทรศัพท์ IVR, จอ Monitoring TV ≥50" & ติด QR Sticker</p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff375f" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <span class="tag-pill tag-pink">ข้อ 5.11 – 5.18</span>
+                <h4 style="margin:0.4rem 0 0.25rem; font-size:0.95rem;">คุม SLA & ทำ PM</h4>
+                <p class="bento-sub">วิเคราะห์ ≤4 ชม. ซ่อม ≤24/48/72 ชม. ทำ PM Data Center 3 ครั้ง & ทั่วประเทศ 1 ครั้ง</p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#28cd41" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+                </div>
+                <span class="tag-pill tag-green">ข้อ 5.19, 9, 5.33</span>
+                <h4 style="margin:0.4rem 0 0.25rem; font-size:0.95rem;">ตรวจรับทุกวันที่ 10</h4>
+                <p class="bento-sub">ส่งรายงานรายเดือน 10 รายการภายในวันที่ 10 ของเดือนถัดไป + คณะกรรมการฯ (≥10 คน) ลงพื้นที่ ≥5 ครั้ง</p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </div>
+                <span class="tag-pill tag-blue">ข้อ 5.20 – 5.24</span>
+                <h4 style="margin:0.4rem 0 0.25rem; font-size:0.95rem;">ส่งมอบงวดสุดท้าย</h4>
+                <p class="bento-sub">ส่ง Thumb Drive ≥2 ชุด (PDF/Excel) ครบ 5 รายงานใหญ่ + คืนเครื่องเดิมที่ถูกเปลี่ยนถาวร</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- QR Sticker Visual Card -->
+          <div class="bento-card col-4">
+            <div>
+              <div class="bento-label">🏷️ มาตรฐาน Sticker ครุภัณฑ์ (ข้อ 5.36)</div>
+              <div class="bento-title">แบบจำลอง Sticker สีขาวติดอุปกรณ์</div>
+              <p class="bento-sub">ต้องติดในบริเวณที่มองเห็นชัดและถ่ายภาพเก็บในฐานข้อมูล (ข้อ 5.7, 5.20)</p>
+            </div>
+            <div style="margin-top:0.9rem; background:#ffffff; border:2px solid #1d1d1f; border-radius:14px; padding:0.85rem; color:#1d1d1f;">
+              <div style="text-align:center; font-weight:800; font-size:0.82rem; border-bottom:1px solid #e2e8f0; padding-bottom:0.35rem; margin-bottom:0.5rem;">
+                โครงการจ้างบำรุงรักษาระบบคอมพิวเตอร์<br>
+                <span style="font-size:0.72rem; font-weight:600; color:#d61f4b;">อุปกรณ์คอมพิวเตอร์ขัดข้อง แจ้ง โทร. XXXX-XXXXXX</span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-around; gap:0.5rem;">
+                <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke="#1d1d1f" stroke-width="2">
+                  <circle cx="24" cy="24" r="20"/><line x1="24" y1="8" x2="24" y2="38"/><line x1="12" y1="18" x2="36" y2="18"/>
+                  <path d="M12 18l-4 10h8l-4-10zM36 18l-4 10h8l-4-10z"/>
+                </svg>
+                <svg width="42" height="42" viewBox="0 0 40 40" fill="#1d1d1f">
+                  <rect x="2" y="2" width="12" height="12" fill="none" stroke="#1d1d1f" stroke-width="3"/><rect x="6" y="6" width="4" height="4"/>
+                  <rect x="26" y="2" width="12" height="12" fill="none" stroke="#1d1d1f" stroke-width="3"/><rect x="30" y="6" width="4" height="4"/>
+                  <rect x="2" y="26" width="12" height="12" fill="none" stroke="#1d1d1f" stroke-width="3"/><rect x="6" y="30" width="4" height="4"/>
+                  <rect x="18" y="18" width="6" height="6"/><rect x="28" y="28" width="8" height="8"/>
+                </svg>
+                <div style="border:1.5px solid #1d1d1f; padding:0.28rem 0.45rem; font-weight:800; font-size:0.74rem;">
+                  STK NO. XXXX-XXXXXX
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.72rem; font-weight:700; margin-top:0.45rem; padding-top:0.35rem; border-top:1px solid #e2e8f0;">
+                <span>ครุภัณฑ์ XXXX-XXX-XXXX/XX.XX</span>
+                <span>ประเภทอุปกรณ์</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PM & Field Inspection Card -->
+          <div class="bento-card blue-grad col-8">
+            <div>
+              <div class="bento-label">✈️ การบำรุงรักษาเชิงป้องกัน (PM) & การลงพื้นที่ตรวจงาน (ข้อ 5.11 & 5.33)</div>
+              <div class="bento-title" style="font-size:1.38rem;">เชื่อมโยงการทำ PM ทั่วประเทศ เข้ากับการเดินทางไปตรวจรับงานของคณะกรรมการฯ</div>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:0.95rem; margin-top:0.9rem;">
+              <div style="background:rgba(255,255,255,0.14); padding:1.05rem; border-radius:16px;">
+                <div style="font-size:1.75rem; font-weight:800; color:#fde68a;">3 ครั้ง / ปี</div>
+                <div style="font-weight:700; font-size:0.9rem;">PM ห้อง Data Center</div>
+                <div class="bento-sub" style="font-size:0.78rem;">ตรวจเครื่องแม่ข่าย 5 เครื่อง และอุปกรณ์เครือข่ายใน Data Center 10 เครื่อง</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.14); padding:1.05rem; border-radius:16px;">
+                <div style="font-size:1.75rem; font-weight:800; color:#5ac8fa;">1 ครั้ง / แห่ง</div>
+                <div style="font-weight:700; font-size:0.9rem;">PM หน่วยงานทั่วประเทศ</div>
+                <div class="bento-sub" style="font-size:0.78rem;">ตรวจสภาพ ทำความสะอาด ทดสอบเครื่องลูกข่าย 3,849 เครื่อง และเครือข่ายภูมิภาค</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.14); padding:1.05rem; border-radius:16px;">
+                <div style="font-size:1.75rem; font-weight:800; color:#28cd41;">≥ 5 ครั้ง (≥10 คน)</div>
+                <div style="font-weight:700; font-size:0.9rem;">กรรมการฯ ลงพื้นที่ตรวจ</div>
+                <div class="bento-sub" style="font-size:0.78rem;">ครั้งละไม่น้อยกว่า 3 วันทำการ โดยผู้รับจ้างรับผิดชอบค่าใช้จ่ายทั้งหมด</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 2: INTERACTIVE ER / DR DIAGRAM (100% PURE CSS STATE MACHINE)
+           ==================================================================== -->
+      <section class="tab-view" id="view-2">
+
+        <!-- Pure CSS Radios for ER Line Filtering -->
+        <input type="radio" name="er-filter" id="er-f-all" class="state-radio" checked>
+        <input type="radio" name="er-filter" id="er-f-asset" class="state-radio">
+        <input type="radio" name="er-filter" id="er-f-sla" class="state-radio">
+        <input type="radio" name="er-filter" id="er-f-pay" class="state-radio">
+
+        <!-- Pure CSS Radios for ER Node Inspection -->
+        <input type="radio" name="er-node" id="en-0" class="state-radio" checked>
+        <input type="radio" name="er-node" id="en-1" class="state-radio">
+        <input type="radio" name="er-node" id="en-2" class="state-radio">
+        <input type="radio" name="er-node" id="en-3" class="state-radio">
+        <input type="radio" name="er-node" id="en-4" class="state-radio">
+        <input type="radio" name="er-node" id="en-5" class="state-radio">
+        <input type="radio" name="er-node" id="en-6" class="state-radio">
+
+        <div class="diagram-stage">
+          <div class="diagram-toolbar">
+            <div>
+              <div style="font-size:0.76rem; font-weight:700; color:#5ac8fa; text-transform:uppercase; letter-spacing:0.06em;">Interactive Entity-Relationship & Data Flow Graph</div>
+              <h2 style="font-size:1.35rem; font-weight:800;">ผังความสัมพันธ์ข้อมูลงานที่เกี่ยวข้อง (ER Diagram) & ระบบกู้คืนฉุกเฉิน (DR Diagram)</h2>
+            </div>
+            <div class="filter-chips">
+              <label for="er-f-all" class="chip-label">🌐 แสดงทุกเส้นเชื่อมโยง</label>
+              <label for="er-f-asset" class="chip-label">🖥️ สายครุภัณฑ์ & PM</label>
+              <label for="er-f-sla" class="chip-label">⚡ สายแจ้งซ่อม & SLA</label>
+              <label for="er-f-pay" class="chip-label">💰 สายตรวจรับ & เบิกจ่าย</label>
+            </div>
+          </div>
+
+          <!-- Visual SVG ER Diagram -->
+          <div class="er-svg-wrap">
+            <svg viewBox="0 0 1160 490" width="100%" height="auto" style="min-width:860px; display:block;">
+              <defs>
+                <linearGradient id="coreGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#0071e3"/>
+                  <stop offset="100%" stop-color="#5e5ce6"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Connecting Edges -->
+              <path class="er-edge edge-asset" d="M 580 245 C 430 245, 360 115, 250 115" stroke="#5ac8fa"/>
+              <path class="er-edge edge-sla" d="M 580 245 C 430 245, 360 380, 250 380" stroke="#bf5af2"/>
+              <path class="er-edge edge-asset edge-sla" d="M 580 190 L 580 98" stroke="#28cd41"/>
+              <path class="er-edge edge-sla" d="M 580 300 L 580 390" stroke="#ff375f"/>
+              <path class="er-edge edge-asset edge-pay" d="M 580 245 C 730 245, 800 115, 910 115" stroke="#ff9f0a"/>
+              <path class="er-edge edge-pay" d="M 580 245 C 730 245, 800 380, 910 380" stroke="#28cd41"/>
+
+              <path class="er-edge edge-asset" d="M 250 115 C 360 55, 440 55, 470 55" stroke="#5ac8fa"/>
+              <path class="er-edge edge-sla" d="M 250 380 C 360 435, 440 435, 470 435" stroke="#ff375f"/>
+              <path class="er-edge edge-sla edge-pay" d="M 690 435 C 800 435, 840 415, 910 380" stroke="#ff9f0a"/>
+              <path class="er-edge edge-asset edge-pay" d="M 910 170 L 910 325" stroke="#5ac8fa"/>
+
+              <!-- Cardinality Badges -->
+              <rect x="345" y="150" width="68" height="22" rx="11" fill="#1e293b" stroke="#5ac8fa"/>
+              <text x="379" y="165" fill="#5ac8fa" font-size="11" font-weight="bold" text-anchor="middle">1 : 4,739</text>
+
+              <rect x="345" y="312" width="68" height="22" rx="11" fill="#1e293b" stroke="#bf5af2"/>
+              <text x="379" y="327" fill="#e9d5ff" font-size="11" font-weight="bold" text-anchor="middle">1 : ≥8+5</text>
+
+              <rect x="745" y="150" width="78" height="22" rx="11" fill="#1e293b" stroke="#ff9f0a"/>
+              <text x="784" y="165" fill="#fde68a" font-size="11" font-weight="bold" text-anchor="middle">PM 3 / 1 ครั้ง</text>
+
+              <rect x="745" y="312" width="78" height="22" rx="11" fill="#1e293b" stroke="#28cd41"/>
+              <text x="784" y="327" fill="#86efac" font-size="11" font-weight="bold" text-anchor="middle">1 : 12 งวด</text>
+
+              <!-- Node 0: Center Hub -->
+              <g transform="translate(465, 190)">
+                <rect width="230" height="110" rx="20" fill="url(#coreGrad)" stroke="#ffffff" stroke-width="2"/>
+                <text x="115" y="28" fill="#fde68a" font-size="11" font-weight="bold" text-anchor="middle">CORE ENTITY • ข้อ 1–12</text>
+                <text x="115" y="52" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle">CONTRACT_TOR_2570</text>
+                <text x="115" y="74" fill="#e2e8f0" font-size="12" text-anchor="middle">PK: contract_id (งบ 21.81 ลบ.)</text>
+                <text x="115" y="94" fill="#cbd5e1" font-size="11" text-anchor="middle">ระยะเวลา 12 เดือน • ค่าปรับ 0.10%/วัน</text>
+              </g>
+
+              <!-- Node 1: HARDWARE_ASSET -->
+              <g transform="translate(30, 60)">
+                <rect width="220" height="110" rx="18" fill="#1e293b" stroke="#5ac8fa" stroke-width="2"/>
+                <text x="110" y="28" fill="#5ac8fa" font-size="11" font-weight="bold" text-anchor="middle">ENTITY 1 • ภาคผนวก ข & ข้อ 5.36</text>
+                <text x="110" y="50" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">HARDWARE_ASSET</text>
+                <text x="110" y="72" fill="#cbd5e1" font-size="12" text-anchor="middle">PK: sticker_no / asset_code</text>
+                <text x="110" y="92" fill="#94a3b8" font-size="11" text-anchor="middle">แม่ข่าย 5 | เครือข่าย 885 | AIO 3,849</text>
+              </g>
+
+              <!-- Node 2: 4_SUPPORT_SYSTEMS -->
+              <g transform="translate(470, 10)">
+                <rect width="220" height="90" rx="18" fill="#1e293b" stroke="#28cd41" stroke-width="2"/>
+                <text x="110" y="24" fill="#28cd41" font-size="11" font-weight="bold" text-anchor="middle">ENTITY 2 • ข้อ 5.6 – 5.10</text>
+                <text x="110" y="45" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">4_SUPPORT_SYSTEMS</text>
+                <text x="110" y="64" fill="#cbd5e1" font-size="11" text-anchor="middle">Web Helpdesk • Asset DB</text>
+                <text x="110" y="80" fill="#94a3b8" font-size="11" text-anchor="middle">IVR โทรศัพท์ • จอ Monitoring ≥50"</text>
+              </g>
+
+              <!-- Node 3: PERSONNEL_TEAM -->
+              <g transform="translate(30, 325)">
+                <rect width="220" height="110" rx="18" fill="#1e293b" stroke="#bf5af2" stroke-width="2"/>
+                <text x="110" y="28" fill="#bf5af2" font-size="11" font-weight="bold" text-anchor="middle">ENTITY 3 • ภาคผนวก ก & ข้อ 5.2</text>
+                <text x="110" y="50" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">PERSONNEL_TEAM</text>
+                <text x="110" y="72" fill="#cbd5e1" font-size="12" text-anchor="middle">PK: staff_id (หลัก ≥8 + สำรอง ≥5)</text>
+                <text x="110" y="92" fill="#94a3b8" font-size="11" text-anchor="middle">HelpDesk, Incident, Support, Sys/Net</text>
+              </g>
+
+              <!-- Node 4: INCIDENT_TICKET_SLA -->
+              <g transform="translate(470, 388)">
+                <rect width="220" height="94" rx="18" fill="#1e293b" stroke="#ff375f" stroke-width="2"/>
+                <text x="110" y="24" fill="#ff375f" font-size="11" font-weight="bold" text-anchor="middle">ENTITY 4 • ข้อ 5.12 – 5.15</text>
+                <text x="110" y="45" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">INCIDENT_TICKET_SLA</text>
+                <text x="110" y="64" fill="#cbd5e1" font-size="11" text-anchor="middle">PK: call_no | วิเคราะห์ ≤4 ชม.</text>
+                <text x="110" y="81" fill="#fda4af" font-size="11" text-anchor="middle">ซ่อม ≤24/48/72ชม. • เปลี่ยนถาวร 1/2/3ด.</text>
+              </g>
+
+              <!-- Node 5: PM_&_LICENSE_PLAN -->
+              <g transform="translate(910, 60)">
+                <rect width="220" height="110" rx="18" fill="#1e293b" stroke="#ff9f0a" stroke-width="2"/>
+                <text x="110" y="28" fill="#ff9f0a" font-size="11" font-weight="bold" text-anchor="middle">ENTITY 5 • ข้อ 5.11 & ผนวก ข 1.1</text>
+                <text x="110" y="50" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">PM_&_LICENSE_PLAN</text>
+                <text x="110" y="72" fill="#cbd5e1" font-size="12" text-anchor="middle">PK: service_form_id</text>
+                <text x="110" y="92" fill="#fde68a" font-size="11" text-anchor="middle">DC 3 ครั้ง • ภูมิภาค 1 ครั้ง • ต่อ License</text>
+              </g>
+
+              <!-- Node 6: INSPECTION_&_PAYMENT -->
+              <g transform="translate(910, 325)">
+                <rect width="220" height="110" rx="18" fill="#1e293b" stroke="#28cd41" stroke-width="2"/>
+                <text x="110" y="28" fill="#28cd41" font-size="11" font-weight="bold" text-anchor="middle">ENTITY 6 • ข้อ 5.19–5.24, 5.33, 9</text>
+                <text x="110" y="50" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">INSPECTION_&_PAYMENT</text>
+                <text x="110" y="72" fill="#cbd5e1" font-size="12" text-anchor="middle">PK: period_no (1–12 ภายในวันที่ 10)</text>
+                <text x="110" y="92" fill="#86efac" font-size="11" text-anchor="middle">ลงพื้นที่ ≥5 ครั้ง • งวดสุดท้าย FlashDrive</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Pure CSS Clickable Node Bar to Inspect Schema Details -->
+          <div style="margin-top:1rem; font-size:0.82rem; color:#5ac8fa; font-weight:700;">👇 คลิกเลือกโหนดด้านล่างเพื่อดูโครงสร้างคีย์เชื่อมโยง (Entity Schema & Foreign Keys):</div>
+          <div class="node-selector-bar">
+            <label for="en-0" class="node-pill">0. CONTRACT_TOR_2570</label>
+            <label for="en-1" class="node-pill">1. HARDWARE_ASSET (4,739)</label>
+            <label for="en-2" class="node-pill">2. 4_SUPPORT_SYSTEMS</label>
+            <label for="en-3" class="node-pill">3. PERSONNEL_TEAM (≥8+5)</label>
+            <label for="en-4" class="node-pill">4. INCIDENT_TICKET_SLA</label>
+            <label for="en-5" class="node-pill">5. PM_&_LICENSE_PLAN</label>
+            <label for="en-6" class="node-pill">6. INSPECTION_&_PAYMENT</label>
+          </div>
+
+          <!-- Pre-rendered Entity Detail Cards (Switched via Pure CSS) -->
+          <div class="er-detail-card" id="er-card-0">
+            <div>
+              <span class="tag-pill tag-blue" style="background:rgba(90,200,250,0.2); color:#5ac8fa;">CORE ENTITY • ข้อ 1–12</span>
+              <h3 style="font-size:1.22rem; margin:0.4rem 0;">CONTRACT_TOR_2570 (ศูนย์กลางสัญญาจ้าง)</h3>
+              <div style="font-family:monospace; font-size:0.8rem; color:#fde68a; background:rgba(0,0,0,0.35); padding:0.55rem 0.75rem; border-radius:10px;">
+                PK: contract_id | budget: 21,812,971.94 | duration: 12 เดือน | penalty_rate: 0.10%/วัน
+              </div>
+            </div>
+            <ul style="padding-left:1.2rem; font-size:0.88rem; color:#e2e8f0; line-height:1.65;">
+              <li><strong>เชื่อมกับ HARDWARE_ASSET (1 : 4,739 หน่วย):</strong> ดูแลครุภัณฑ์ตามภาคผนวก ข ทั่วประเทศ และสงวนสิทธิ์แก้ไขสัญญาเพิ่ม/ลดจำนวนตามข้อ 5.37</li>
+              <li><strong>เชื่อมกับ PERSONNEL_TEAM:</strong> บังคับส่งประวัติและใบรับรองผลงานภายใน 15 วันนับถัดจากวันลงนามสัญญา (ข้อ 5.2)</li>
+              <li><strong>เชื่อมกับ INSPECTION_&_PAYMENT:</strong> แบ่งงวดงานและจ่ายเงินรายเดือนรวม 12 งวด ส่งมอบภายในวันที่ 10 ของเดือนถัดไป (ข้อ 6, 9)</li>
+            </ul>
+          </div>
+
+          <div class="er-detail-card" id="er-card-1">
+            <div>
+              <span class="tag-pill tag-blue" style="background:rgba(90,200,250,0.2); color:#5ac8fa;">ENTITY 1 • ภาคผนวก ข & ข้อ 5.7, 5.36</span>
+              <h3 style="font-size:1.22rem; margin:0.4rem 0;">HARDWARE_ASSET (ครุภัณฑ์คอมพิวเตอร์ 4,739 หน่วย)</h3>
+              <div style="font-family:monospace; font-size:0.8rem; color:#fde68a; background:rgba(0,0,0,0.35); padding:0.55rem 0.75rem; border-radius:10px;">
+                PK: sticker_no, asset_code | FK: dept_id, location, brand_model, ip_address, photo_sticker
+              </div>
+            </div>
+            <ul style="padding-left:1.2rem; font-size:0.88rem; color:#e2e8f0; line-height:1.65;">
+              <li><strong>เชื่อมกับ 4_SUPPORT_SYSTEMS:</strong> ทุกชิ้นต้องติด Sticker QR Code (ข้อ 5.36) เก็บลงฐานข้อมูลครุภัณฑ์ (ข้อ 5.7) และ Switch 518 ตัวต้องขึ้นจอ Monitoring ≥ 50 นิ้ว (ข้อ 5.9)</li>
+              <li><strong>เชื่อมกับ PM_&_LICENSE_PLAN:</strong> เครื่องแม่ข่ายและอุปกรณ์ใน Data Center ทำ PM 3 ครั้ง/ปี ส่วนภูมิภาคทำ PM 1 ครั้ง/ปี (ข้อ 5.11)</li>
+              <li><strong>เชื่อมกับ INCIDENT_TICKET_SLA:</strong> กำหนดเวลาซ่อมตามประเภทอุปกรณ์และจุดติดตั้ง (24 / 48 / 72 ชม.)</li>
+            </ul>
+          </div>
+
+          <div class="er-detail-card" id="er-card-2">
+            <div>
+              <span class="tag-pill tag-green" style="background:rgba(40,205,65,0.2); color:#86efac;">ENTITY 2 • ข้อ 5.6 – 5.10</span>
+              <h3 style="font-size:1.22rem; margin:0.4rem 0;">4_SUPPORT_SYSTEMS (ระบบสนับสนุนการบริการ 4 ระบบ)</h3>
+              <div style="font-family:monospace; font-size:0.8rem; color:#fde68a; background:rgba(0,0,0,0.35); padding:0.55rem 0.75rem; border-radius:10px;">
+                PK: system_id | Web Helpdesk (5.6), Asset DB (5.7), IVR (5.8), Network Monitoring TV ≥50" (5.9)
+              </div>
+            </div>
+            <ul style="padding-left:1.2rem; font-size:0.88rem; color:#e2e8f0; line-height:1.65;">
+              <li><strong>เชื่อมกับ PERSONNEL_TEAM:</strong> เจ้าหน้าที่ Help Desk (≥2 คน) และ Incident Officer (≥1 คน) ใช้บันทึกและติดตามหมายเลข Call No.</li>
+              <li><strong>เชื่อมกับ HARDWARE_ASSET:</strong> เก็บภาพถ่ายอุปกรณ์ที่มองเห็น Sticker ชัดเจน และแสดงสถานะการทำงานของ Switch 508, Core Switch 2, Access Switch 8</li>
+              <li><strong>เชื่อมกับ INSPECTION_&_PAYMENT:</strong> ส่งออกฐานข้อมูลทั้งหมดลง Thumb Drive ≥ 2 ชุดในงวดงานสุดท้าย (ข้อ 5.22)</li>
+            </ul>
+          </div>
+
+          <div class="er-detail-card" id="er-card-3">
+            <div>
+              <span class="tag-pill tag-purple" style="background:rgba(191,90,242,0.2); color:#e9d5ff;">ENTITY 3 • ภาคผนวก ก & ข้อ 5.2–5.5</span>
+              <h3 style="font-size:1.22rem; margin:0.4rem 0;">PERSONNEL_TEAM (ทีมบุคลากรหลัก ≥8 คน + สำรอง ≥5 คน)</h3>
+              <div style="font-family:monospace; font-size:0.8rem; color:#fde68a; background:rgba(0,0,0,0.35); padding:0.55rem 0.75rem; border-radius:10px;">
+                PK: staff_id | role_id (1–5) | work_hours: 08.30–17.00 | cert_required: SysAdmin & NetAdmin
+              </div>
+            </div>
+            <ul style="padding-left:1.2rem; font-size:0.88rem; color:#e2e8f0; line-height:1.65;">
+              <li><strong>เชื่อมกับ INCIDENT_TICKET_SLA:</strong> รับแจ้ง วิเคราะห์สาเหตุภายใน 4 ชม. และแก้ไขปัญหาทั้งแบบ Online Support (ข้อ 5.12) และ On-site</li>
+              <li><strong>เชื่อมกับ PM_&_LICENSE_PLAN:</strong> System Admin ดูแล Backup, Crash Recovery, สำรอง Configuration File ลง Log Book</li>
+              <li><strong>เชื่อมกับ INSPECTION_&_PAYMENT:</strong> ต้องส่งรายงานตารางเวลาการเข้าปฏิบัติงานทุกเดือน (ข้อ 5.19) หากคนหลักไม่มาต้องจัดคนสำรองแทนทันที</li>
+            </ul>
+          </div>
+
+          <div class="er-detail-card" id="er-card-4">
+            <div>
+              <span class="tag-pill tag-pink" style="background:rgba(255,55,95,0.2); color:#fda4af;">ENTITY 4 • ข้อ 5.12 – 5.15</span>
+              <h3 style="font-size:1.22rem; margin:0.4rem 0;">INCIDENT_TICKET_SLA (ใบงานแจ้งซ่อม & การควบคุม SLA)</h3>
+              <div style="font-family:monospace; font-size:0.8rem; color:#fde68a; background:rgba(0,0,0,0.35); padding:0.55rem 0.75rem; border-radius:10px;">
+                PK: call_no | FK: sticker_no, staff_id | triage: ≤4h | fix: ≤24h/48h/72h | loaner_cap: 1m/2m/3m
+              </div>
+            </div>
+            <ul style="padding-left:1.2rem; font-size:0.88rem; color:#e2e8f0; line-height:1.65;">
+              <li><strong>เชื่อมกับ HARDWARE_ASSET:</strong> ผูกใบงานซ่อมเข้ากับหมายเลข Sticker No. และพื้นที่ติดตั้ง (พื้นที่หลักส่วนกลาง vs พื้นที่อื่นทั่วประเทศ)</li>
+              <li><strong>เชื่อมกับ INSPECTION_&_PAYMENT:</strong> สรุปเป็นรายงานรายเดือนข้อ 5.19 (ตาราง/กราฟสรุปปัญหา, รายงานติดตามเครื่องสำรอง) หากเกิน SLA จะถูกคิดค่าปรับตามข้อ 10</li>
+            </ul>
+          </div>
+
+          <div class="er-detail-card" id="er-card-5">
+            <div>
+              <span class="tag-pill tag-orange" style="background:rgba(255,159,10,0.2); color:#fde68a;">ENTITY 5 • ข้อ 5.11 & ภาคผนวก ข ข้อ 1.1</span>
+              <h3 style="font-size:1.22rem; margin:0.4rem 0;">PM_&_LICENSE_PLAN (แผนบำรุงรักษาเชิงป้องกัน & ต่ออายุสิทธิ์)</h3>
+              <div style="font-family:monospace; font-size:0.8rem; color:#fde68a; background:rgba(0,0,0,0.35); padding:0.55rem 0.75rem; border-radius:10px;">
+                PK: service_form_id | dc_pm: 3 ครั้ง | site_pm: 1 ครั้ง | fortigate_license_leadtime: ≥1 เดือน
+              </div>
+            </div>
+            <ul style="padding-left:1.2rem; font-size:0.88rem; color:#e2e8f0; line-height:1.65;">
+              <li><strong>เชื่อมกับ HARDWARE_ASSET:</strong> ออกใบรับบริการ (Service Form) ให้ผู้ใช้งานทุกครั้ง และอัปเดตฐานข้อมูลครุภัณฑ์ให้ตรงตามจริง</li>
+              <li><strong>เชื่อมกับ INSPECTION_&_PAYMENT:</strong> รวบรวมส่งเป็นรายงานผล PM ทั่วประเทศพร้อมภาพถ่าย Sticker ในงวดงานสุดท้าย (ข้อ 5.20)</li>
+            </ul>
+          </div>
+
+          <div class="er-detail-card" id="er-card-6">
+            <div>
+              <span class="tag-pill tag-green" style="background:rgba(40,205,65,0.2); color:#86efac;">ENTITY 6 • ข้อ 5.19–5.24, 5.33, 9, 10</span>
+              <h3 style="font-size:1.22rem; margin:0.4rem 0;">INSPECTION_&_PAYMENT (การตรวจรับพัสดุ & เบิกจ่ายงบประมาณ)</h3>
+              <div style="font-family:monospace; font-size:0.8rem; color:#fde68a; background:rgba(0,0,0,0.35); padding:0.55rem 0.75rem; border-radius:10px;">
+                PK: period_no (1–12) | due_date: วันที่ 10 ของเดือนถัดไป | site_visit: ≥5 ครั้ง (≥10 คน, ≥3 วันทำการ)
+              </div>
+            </div>
+            <ul style="padding-left:1.2rem; font-size:0.88rem; color:#e2e8f0; line-height:1.65;">
+              <li><strong>เชื่อมกับ INCIDENT_TICKET_SLA & PERSONNEL_TEAM:</strong> ตรวจรายงาน 10 รายการหลักทุกเดือน (พร้อมใบลงนามเข้าบริการตามข้อ 5.27) ก่อนอนุมัติจ่ายเงิน</li>
+              <li><strong>เชื่อมกับ HARDWARE_ASSET & PM_&_LICENSE_PLAN:</strong> ตรวจรับ Thumb Drive ≥ 2 ชุด (ข้อ 5.20–5.24) และรับคืนเครื่องเดิมที่ถูกเปลี่ยนถาวร (ข้อ 5.14.2)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DR DIAGRAM (Disaster Recovery & Crash Recovery Flow) -->
+        <div class="bento-card col-12">
+          <div>
+            <div class="bento-label">🚨 DR Diagram — แผนสำรองฉุกเฉินและการกู้คืนระบบ (Disaster Recovery & Crash Recovery Flow)</div>
+            <div class="bento-title">ผังขั้นตอนการรับมือเหตุวิกฤตและกู้คืนระบบตามข้อ 5.1, 5.14 และภาคผนวก ก ข้อ 4(6)–(8)</div>
+            <p class="bento-sub">เชื่อมโยงหน้าที่การจัดทำแผนสำรองฉุกเฉินภายใน 15 วันแรก เข้ากับการสำรองข้อมูล (Backup) การกู้คืนเครื่องแม่ข่าย และการทดแทนอุปกรณ์</p>
+          </div>
+
+          <div class="infographic-steps" style="margin-top:1.1rem;">
+            <div class="info-node" style="border-top:4px solid #0071e3;">
+              <span class="tag-pill tag-blue">ขั้นที่ 1 • ป้องกันล่วงหน้า (ข้อ 5.1)</span>
+              <h4 style="margin:0.45rem 0;">Backup & Config Log Book</h4>
+              <p class="bento-sub">ส่ง <strong>แผนสำรองฉุกเฉินพร้อมคู่มือ (≥2 ชุด)</strong> ภายใน 15 วันแรก + System Admin สำรองข้อมูล (Backup) และสำรอง <strong>Configuration File ลง Log Book</strong> ทุกครั้งที่มีการแก้ไข</p>
+            </div>
+
+            <div class="info-node" style="border-top:4px solid #ff9f0a;">
+              <span class="tag-pill tag-orange">ขั้นที่ 2 • เมื่อเกิดวิกฤต (≤ 4 ชม.)</span>
+              <h4 style="margin:0.45rem 0;">Triage & Crash Analysis</h4>
+              <p class="bento-sub">แจ้งเหตุผ่าน Web/IVR ออกเลข <strong>Call No.</strong> ทีม System/Network Admin ตรวจสอบวิเคราะห์สาเหตุฉุกเฉิน <strong>ภายใน 4 ชั่วโมง</strong> (นับรวมเวลานอกราชการ)</p>
+            </div>
+
+            <div class="info-node" style="border-top:4px solid #ff375f;">
+              <span class="tag-pill tag-pink">ขั้นที่ 3 • กู้คืนเร่งด่วน (24/48/72 ชม.)</span>
+              <h4 style="margin:0.45rem 0;">Crash Recovery & Loaner</h4>
+              <p class="bento-sub">กู้คืนระบบแม่ข่าย (Crash Recovery) หรือนำ Config เดิมกลับมาใช้ พร้อมซ่อมหรือวาง<strong>อุปกรณ์ทดแทนชั่วคราว</strong>ให้ใช้งานได้ภายใน <strong>24 ชม. (แม่ข่าย/เครือข่ายหลัก)</strong>, 48 ชม. หรือ 72 ชม.</p>
+            </div>
+
+            <div class="info-node" style="border-top:4px solid #28cd41;">
+              <span class="tag-pill tag-green">ขั้นที่ 4 • ฟื้นฟูถาวร (1 / 2 / 3 เดือน)</span>
+              <h4 style="margin:0.45rem 0;">Permanent Replacement</h4>
+              <p class="bento-sub">หากซ่อมเครื่องเดิมไม่เสร็จใน <strong>1 เดือน (เครือข่าย), 2 เดือน (ลูกข่าย), 3 เดือน (แม่ข่าย)</strong> ต้องขอความเห็นชอบ สอ. เปลี่ยนเครื่องใหม่ถาวร (สเปกเทียบเท่า/ดีกว่า) และ<strong>ส่งคืนเครื่องเดิมให้ สอ.</strong></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 3: HARDWARE (ภาคผนวก ข) & 4 SUPPORT SYSTEMS (ข้อ 5.6–5.10)
+           ==================================================================== -->
+      <section class="tab-view" id="view-3">
+        <div class="bento-grid">
+
+          <!-- 4 Support Systems Infographic -->
+          <div class="bento-card dark-pro col-12">
+            <div>
+              <div class="bento-label">🛰️ ระบบสนับสนุนการให้บริการ 4 มิติ (ข้อ 5.6 – 5.10)</div>
+              <div class="bento-title">ผู้รับจ้างต้องจัดหาทรัพยากรและติดตั้งระบบทั้ง 4 ส่วนให้พร้อมใช้งานตลอดอายุสัญญา</div>
+            </div>
+            <div class="infographic-steps" style="margin-top:1rem;">
+              <div style="background:rgba(255,255,255,0.08); padding:1.2rem; border-radius:18px;">
+                <span class="tag-pill tag-blue" style="background:rgba(90,200,250,0.2); color:#5ac8fa;">ระบบที่ 1 • ข้อ 5.6</span>
+                <h4 style="margin:0.45rem 0; font-size:1.05rem;">Web Helpdesk System</h4>
+                <p class="bento-sub">ระบบรับแจ้งปัญหา ติดตาม และบันทึกการแก้ไข เรียกใช้งานผ่าน Web Browser (Chrome, Firefox, Edge เป็นอย่างน้อย) ทั้งบน Intranet และ Internet</p>
+              </div>
+              <div style="background:rgba(255,255,255,0.08); padding:1.2rem; border-radius:18px;">
+                <span class="tag-pill tag-green" style="background:rgba(40,205,65,0.2); color:#86efac;">ระบบที่ 2 • ข้อ 5.7</span>
+                <h4 style="margin:0.45rem 0; font-size:1.05rem;">Asset Database System</h4>
+                <p class="bento-sub">ระบบฐานข้อมูลครุภัณฑ์ตามภาคผนวก ข และครุภัณฑ์อื่นที่ สอ. กำหนด เก็บหน่วยงาน ที่ตั้ง ยี่ห้อ รุ่น Sticker No. เลขครุภัณฑ์ IP Address และ<strong>ภาพถ่ายที่เห็น Sticker ชัดเจน</strong></p>
+              </div>
+              <div style="background:rgba(255,255,255,0.08); padding:1.2rem; border-radius:18px;">
+                <span class="tag-pill tag-orange" style="background:rgba(255,159,10,0.2); color:#fde68a;">ระบบที่ 3 • ข้อ 5.8</span>
+                <h4 style="margin:0.45rem 0; font-size:1.05rem;">ระบบโทรศัพท์อัตโนมัติ (IVR)</h4>
+                <p class="bento-sub">Interactive Voice Response รับสายอัตโนมัติ กล่าวต้อนรับ เสนอทางเลือก แจ้งสถานะการรอสาย และ<strong>บันทึกเสียงการสนทนาได้ทั้งหมด</strong></p>
+              </div>
+              <div style="background:rgba(255,255,255,0.08); padding:1.2rem; border-radius:18px;">
+                <span class="tag-pill tag-pink" style="background:rgba(255,55,95,0.2); color:#fda4af;">ระบบที่ 4 • ข้อ 5.9</span>
+                <h4 style="margin:0.45rem 0; font-size:1.05rem;">Network Monitoring & TV ≥ 50"</h4>
+                <p class="bento-sub">แสดงสถานะการทำงานของอุปกรณ์เครือข่ายตามภาคผนวก ข ข้อ 2.1 (508), 2.3 (2) และ 2.4 (8) พร้อมติดตั้งจอภาพ <strong>Smart TV LED หรือดีกว่า ขนาด ≥ 50 นิ้ว</strong></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hardware Visual Cards -->
+          <div class="bento-card col-12">
+            <div>
+              <div class="bento-label">📦 บัญชีรายการครุภัณฑ์ตามภาคผนวก ข (รวม 4,739 หน่วย • 8 รายการ)</div>
+              <div class="bento-title">แทนค่าด้วยการ์ดภาพอุปกรณ์พร้อมเงื่อนไขการดูแลเฉพาะรายการ</div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:1.05rem; margin-top:1rem;">
+              <div class="hw-visual-card">
+                <div class="hw-illu">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ff375f" stroke-width="2"><rect x="2" y="3" width="20" height="7" rx="2"/><rect x="2" y="14" width="20" height="7" rx="2"/><circle cx="6" cy="6.5" r="1"/><circle cx="6" cy="17.5" r="1"/></svg>
+                </div>
+                <div>
+                  <span class="tag-pill tag-pink">ลำดับ 1.1 • ห้อง Data Center</span>
+                  <h4 style="font-size:1rem; margin-top:0.2rem;">Firewall Fortinet รุ่น FortiGate 400F</h4>
+                  <div style="font-size:1.3rem; font-weight:800; color:#ff375f;">2 หน่วย</div>
+                  <p class="bento-sub" style="font-size:0.78rem;">พร้อม License (Web Filtering, IPS, Antivirus) • <strong>เสนอต่อ License ล่วงหน้า ≥ 1 เดือน (ข้อ 5.11)</strong> • PM 3 ครั้ง/ปี</p>
+                </div>
+              </div>
+
+              <div class="hw-visual-card">
+                <div class="hw-illu">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ff9f0a" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                  <span class="tag-pill tag-orange">ลำดับ 1.2 & 1.3 • ห้อง Data Center</span>
+                  <h4 style="font-size:1rem; margin-top:0.2rem;">FortiGate 3950B (2) & VPN F5 BIG-IP 2000S (1)</h4>
+                  <div style="font-size:1.3rem; font-weight:800; color:#ff9f0a;">รวม 3 หน่วย</div>
+                  <p class="bento-sub" style="font-size:0.78rem;">ทำ PM ในห้อง Data Center <strong>3 ครั้ง/ปี</strong> • SLA วิเคราะห์ ≤ 4 ชม. ซ่อมเสร็จ ≤ 24 ชม. (เปลี่ยนถาวรเมื่อเกิน 3 เดือน)</p>
+                </div>
+              </div>
+
+              <div class="hw-visual-card">
+                <div class="hw-illu">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5e5ce6" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="10" y1="12" x2="10.01" y2="12"/><line x1="14" y1="12" x2="18" y2="12"/></svg>
+                </div>
+                <div>
+                  <span class="tag-pill tag-purple">ลำดับ 2.3 & 2.4 • ห้อง Data Center</span>
+                  <h4 style="font-size:1rem; margin-top:0.2rem;">Core Switch HP A7506 (2) & Access Switch HP A5120 (8)</h4>
+                  <div style="font-size:1.3rem; font-weight:800; color:#5e5ce6;">รวม 10 หน่วย</div>
+                  <p class="bento-sub" style="font-size:0.78rem;"><strong>ต้องขึ้นระบบ Monitoring จอ ≥ 50" (ข้อ 5.9)</strong> • ทำ PM 3 ครั้ง/ปี • SLA ซ่อมเสร็จ ≤ 24 ชม.</p>
+                </div>
+              </div>
+
+              <div class="hw-visual-card">
+                <div class="hw-illu">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4"/></svg>
+                </div>
+                <div>
+                  <span class="tag-pill tag-blue">ลำดับ 2.1 • อาคาร สอ. ทั่วประเทศ</span>
+                  <h4 style="font-size:1rem; margin-top:0.2rem;">อุปกรณ์กระจายสัญญาณ Switch</h4>
+                  <div style="font-size:1.3rem; font-weight:800; color:#0071e3;">508 หน่วย</div>
+                  <p class="bento-sub" style="font-size:0.78rem;"><strong>ต้องแสดงผลบนระบบ Monitoring (ข้อ 5.9)</strong> • ทำ PM หน่วยงานละ 1 ครั้ง • SLA 24 ชม. (พื้นที่หลัก) / 72 ชม. (ภูมิภาค)</p>
+                </div>
+              </div>
+
+              <div class="hw-visual-card">
+                <div class="hw-illu">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#28cd41" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
+                </div>
+                <div>
+                  <span class="tag-pill tag-green">ลำดับ 2.2 • อาคาร สอ. ทั่วประเทศ</span>
+                  <h4 style="font-size:1rem; margin-top:0.2rem;">อุปกรณ์กระจายสัญญาณไร้สาย (Access Point)</h4>
+                  <div style="font-size:1.3rem; font-weight:800; color:#198728;">367 หน่วย</div>
+                  <p class="bento-sub" style="font-size:0.78rem;">ทำ PM หน่วยงานละ 1 ครั้ง • SLA 24 ชม. (พื้นที่หลัก) / 72 ชม. (พื้นที่อื่นทั่วประเทศ) • เปลี่ยนถาวรเมื่อเกิน 1 เดือน</p>
+                </div>
+              </div>
+
+              <div class="hw-visual-card">
+                <div class="hw-illu">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <div>
+                  <span class="tag-pill tag-blue">ลำดับ 3.1 • อาคาร สอ. ทั่วประเทศ</span>
+                  <h4 style="font-size:1rem; margin-top:0.2rem;">เครื่องคอมพิวเตอร์ All In One</h4>
+                  <div style="font-size:1.3rem; font-weight:800; color:#0071e3;">3,849 หน่วย</div>
+                  <p class="bento-sub" style="font-size:0.78rem;">ทำ PM หน่วยงานละ 1 ครั้ง • SLA ซ่อมเสร็จ <strong>48 ชม. (พื้นที่หลัก)</strong> / <strong>72 ชม. (พื้นที่อื่นทั่วประเทศ)</strong> • เปลี่ยนถาวรเมื่อเกิน 2 เดือน</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 4: SLA & PENALTY SIMULATOR (100% PURE CSS STATE MACHINE)
+           ==================================================================== -->
+      <section class="tab-view" id="view-4">
+
+        <!-- Pure CSS Radios for SLA Scenarios -->
+        <input type="radio" name="sla-scen" id="sla-s1" class="state-radio" checked>
+        <input type="radio" name="sla-scen" id="sla-s2" class="state-radio">
+        <input type="radio" name="sla-scen" id="sla-s3" class="state-radio">
+        <input type="radio" name="sla-scen" id="sla-s4" class="state-radio">
+        <input type="radio" name="sla-scen" id="sla-s5" class="state-radio">
+        <input type="radio" name="sla-scen" id="sla-s6" class="state-radio">
+
+        <!-- Pure CSS Radios for Penalty Presets -->
+        <input type="radio" name="pen-scen" id="pen-1" class="state-radio" checked>
+        <input type="radio" name="pen-scen" id="pen-2" class="state-radio">
+        <input type="radio" name="pen-scen" id="pen-3" class="state-radio">
+        <input type="radio" name="pen-scen" id="pen-5" class="state-radio">
+        <input type="radio" name="pen-scen" id="pen-10" class="state-radio">
+        <input type="radio" name="pen-scen" id="pen-sub" class="state-radio">
+
+        <div class="bento-grid">
+
+          <!-- Interactive SLA Card -->
+          <div class="bento-card col-7">
+            <div>
+              <div class="bento-label">⏱️ Interactive SLA Matrix (ข้อ 5.13 – 5.14)</div>
+              <div class="bento-title">คลิกเลือกกรณีเหตุขัดข้องเพื่อดูเกณฑ์เวลา SLA (นับรวมเวลานอกราชการ)</div>
+            </div>
+
+            <div class="scenario-pills">
+              <label for="sla-s1" class="scen-label">🖥️ 1. เครื่องแม่ข่าย (Data Center)</label>
+              <label for="sla-s2" class="scen-label">💻 2. ลูกข่าย AIO (รัชดาฯ / แจ้งวัฒนะ)</label>
+              <label for="sla-s3" class="scen-label">🏢 3. ลูกข่าย AIO (พื้นที่อื่นทั่วประเทศ)</label>
+              <label for="sla-s4" class="scen-label">🌐 4. เครือข่าย (รัชดาฯ / แจ้งวัฒนะ)</label>
+              <label for="sla-s5" class="scen-label">📡 5. เครือข่าย (พื้นที่อื่นทั่วประเทศ)</label>
+              <label for="sla-s6" class="scen-label">🔧 6. อุปกรณ์นอกภาคผนวก ข</label>
+            </div>
+
+            <!-- Pane 1: Server -->
+            <div class="sla-result-pane" id="sla-pane-1">
+              <div class="infographic-steps">
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#0071e3;">≤ 4 ชม.</div><div style="font-weight:700;">วิเคราะห์สาเหตุ</div><p class="bento-sub">นับตั้งแต่ได้รับแจ้ง (ข้อ 5.14.1 (1))</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#ff375f;">≤ 24 ชม.</div><div style="font-weight:700;">ซ่อมเสร็จ / เครื่องสำรอง</div><p class="bento-sub">ให้ใช้งานได้ตามปกติ (รวมนอกเวลาราชการ)</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#28cd41;">3 เดือน</div><div style="font-weight:700;">เพดานเปลี่ยนถาวร</div><p class="bento-sub">หากซ่อมเครื่องเดิมไม่เสร็จ ต้องเปลี่ยนถาวรและคืนเครื่องเดิมให้ สอ.</p></div>
+              </div>
+            </div>
+
+            <!-- Pane 2: Client Core -->
+            <div class="sla-result-pane" id="sla-pane-2">
+              <div class="infographic-steps">
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#0071e3;">≤ 4 ชม.</div><div style="font-weight:700;">วิเคราะห์สาเหตุ</div><p class="bento-sub">ณ อาคารถนนรัชดาภิเษก / ศูนย์ราชการฯ แจ้งวัฒนะ (อาคารราชบุรีฯ & อาคาร C)</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#ff9f0a;">≤ 48 ชม.</div><div style="font-weight:700;">ซ่อมเสร็จ / เครื่องสำรอง</div><p class="bento-sub">สำหรับเครื่องลูกข่ายใน 3 อาคารหลักส่วนกลาง (ข้อ 5.14.1 (2))</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#28cd41;">2 เดือน</div><div style="font-weight:700;">เพดานเปลี่ยนถาวร</div><p class="bento-sub">หากใช้เครื่องสำรองเกิน 2 เดือน ต้องเปลี่ยนถาวรและคืนเครื่องเดิมให้ สอ.</p></div>
+              </div>
+            </div>
+
+            <!-- Pane 3: Client Other -->
+            <div class="sla-result-pane" id="sla-pane-3">
+              <div class="infographic-steps">
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#0071e3;">≤ 4 ชม.</div><div style="font-weight:700;">วิเคราะห์สาเหตุ</div><p class="bento-sub">ณ สำนักงานอัยการอื่นๆ ทั้งส่วนกลางและส่วนภูมิภาคทั่วประเทศ</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#5e5ce6;">≤ 72 ชม.</div><div style="font-weight:700;">ซ่อมเสร็จ / เครื่องสำรอง</div><p class="bento-sub">สำหรับเครื่องลูกข่ายนอก 3 อาคารหลัก (ข้อ 5.14.1 (2))</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#28cd41;">2 เดือน</div><div style="font-weight:700;">เพดานเปลี่ยนถาวร</div><p class="bento-sub">หากใช้เครื่องสำรองเกิน 2 เดือน ต้องเปลี่ยนถาวรและคืนเครื่องเดิมให้ สอ.</p></div>
+              </div>
+            </div>
+
+            <!-- Pane 4: Network Core -->
+            <div class="sla-result-pane" id="sla-pane-4">
+              <div class="infographic-steps">
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#0071e3;">≤ 4 ชม.</div><div style="font-weight:700;">วิเคราะห์สาเหตุ</div><p class="bento-sub">ณ อาคารถนนรัชดาภิเษก / ศูนย์ราชการฯ แจ้งวัฒนะ (อาคารราชบุรีฯ & อาคาร C)</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#ff375f;">≤ 24 ชม.</div><div style="font-weight:700;">ซ่อมเสร็จ / เครื่องสำรอง</div><p class="bento-sub">สำหรับอุปกรณ์เครือข่ายใน 3 อาคารหลักส่วนกลาง (ข้อ 5.14.1 (3))</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#ff9f0a;">1 เดือน</div><div style="font-weight:700;">เพดานเปลี่ยนถาวร</div><p class="bento-sub">อุปกรณ์เครือข่ายมีเพดานใช้เครื่องสำรองเพียง 1 เดือนก่อนบังคับเปลี่ยนถาวร</p></div>
+              </div>
+            </div>
+
+            <!-- Pane 5: Network Other -->
+            <div class="sla-result-pane" id="sla-pane-5">
+              <div class="infographic-steps">
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#0071e3;">≤ 4 ชม.</div><div style="font-weight:700;">วิเคราะห์สาเหตุ</div><p class="bento-sub">ณ สำนักงานอัยการอื่นๆ ทั้งส่วนกลางและส่วนภูมิภาคทั่วประเทศ</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#5e5ce6;">≤ 72 ชม.</div><div style="font-weight:700;">ซ่อมเสร็จ / เครื่องสำรอง</div><p class="bento-sub">สำหรับอุปกรณ์เครือข่ายนอก 3 อาคารหลัก (ข้อ 5.14.1 (3))</p></div>
+                <div class="info-node"><div style="font-size:1.95rem; font-weight:800; color:#ff9f0a;">1 เดือน</div><div style="font-weight:700;">เพดานเปลี่ยนถาวร</div><p class="bento-sub">หากซ่อมไม่เสร็จใน 1 เดือน ต้องเปลี่ยนถาวรและคืนอุปกรณ์เดิมให้ สอ.</p></div>
+              </div>
+            </div>
+
+            <!-- Pane 6: Outside Appendix B -->
+            <div class="sla-result-pane" id="sla-pane-6">
+              <div class="info-node" style="text-align:left; padding:1.35rem;">
+                <span class="tag-pill tag-orange">ข้อ 5.13 • กรณีอุปกรณ์ไม่อยู่ในรายการภาคผนวก ข</span>
+                <h4 style="margin:0.45rem 0; font-size:1.08rem;">หน้าที่การตรวจสอบ วิเคราะห์ และประสานงานคู่สัญญาอื่น</h4>
+                <p class="bento-sub">• ผู้รับจ้างต้องดำเนินการ<strong>ตรวจสอบ วิเคราะห์ ประสานงานและติดตามคู่สัญญาอื่น</strong>ที่มีความรับผิดชอบต่อสำนักงานอัยการสูงสุด ให้ดำเนินการซ่อมแซมหรือแก้ไขปัญหาจนใช้งานได้ตามปกติ พร้อมแจ้งให้ <strong>สำนักเทคโนโลยีสารสนเทศและการสื่อสาร (สทส.)</strong> ทราบโดยเร็ว (หากไม่มีคู่สัญญาอื่นหรือสิ้นสุดความรับผิดชอบแล้ว ให้ตรวจสอบวิเคราะห์และแจ้ง สทส. ทันที)<br>• <strong>ทั้งนี้ ไม่อยู่ภายใต้ระยะเวลาตามข้อ 5.14</strong></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pure CSS Penalty Simulator Card -->
+          <div class="bento-card dark-pro col-5">
+            <div>
+              <div class="bento-label">🧮 จำลองการคำนวณค่าปรับผิดสัญญา (ข้อ 10)</div>
+              <div class="bento-title">คลิกเลือกกรณีผิดสัญญาเพื่อดูยอดค่าปรับ (0.10% ต่อวัน = 21,812.97 บาท/วัน)</div>
+            </div>
+
+            <div class="pen-pills">
+              <label for="pen-1" class="pen-label">ล่าช้า 1 วัน</label>
+              <label for="pen-2" class="pen-label">1 วัน + เศษ 2 ชม.</label>
+              <label for="pen-3" class="pen-label">ล่าช้า 3 วัน</label>
+              <label for="pen-5" class="pen-label">ล่าช้า 5 วัน</label>
+              <label for="pen-10" class="pen-label">ล่าช้า 10 วัน</label>
+              <label for="pen-sub" class="pen-label">ฝ่าฝืนจ้างช่วง</label>
+            </div>
+
+            <div class="pen-pane" id="pen-box-1">
+              <div style="font-size:0.8rem; color:#fda4af;">ผิดสัญญา 1 วันเต็ม (ร้อยละ 0.10 ของวงเงิน 21,812,971.94 บาท)</div>
+              <div style="font-size:1.75rem; font-weight:800; color:#ffffff; margin:0.25rem 0;">21,812.97 บาท</div>
+              <div style="font-size:0.76rem; color:#fecdd3;">หักจากค่าจ้างงวดรายเดือนก่อนการเบิกจ่าย (ข้อ 9 และ ข้อ 10)</div>
+            </div>
+
+            <div class="pen-pane" id="pen-box-2">
+              <div style="font-size:0.8rem; color:#fda4af;">ผิดสัญญา 1 วัน กับเศษอีก 2 ชั่วโมง → <strong>เศษของชั่วโมงคิดเป็น 1 วัน (รวมคิด 2 วัน)</strong></div>
+              <div style="font-size:1.75rem; font-weight:800; color:#ffffff; margin:0.25rem 0;">43,625.94 บาท</div>
+              <div style="font-size:0.76rem; color:#fecdd3;">อ้างอิง ข้อ 10 วรรคหนึ่ง: "(เศษของชั่วโมง คิดเป็น 1 วัน)"</div>
+            </div>
+
+            <div class="pen-pane" id="pen-box-3">
+              <div style="font-size:0.8rem; color:#fda4af;">ผิดสัญญารวม 3 วัน (3 × 21,812.97 บาท)</div>
+              <div style="font-size:1.75rem; font-weight:800; color:#ffffff; margin:0.25rem 0;">65,438.92 บาท</div>
+              <div style="font-size:0.76rem; color:#fecdd3;">คิดจากอัตราต่อวัน ร้อยละ 0.10 ของมูลค่างานในสัญญา</div>
+            </div>
+
+            <div class="pen-pane" id="pen-box-5">
+              <div style="font-size:0.8rem; color:#fda4af;">ผิดสัญญารวม 5 วัน (5 × 21,812.97 บาท)</div>
+              <div style="font-size:1.75rem; font-weight:800; color:#ffffff; margin:0.25rem 0;">109,064.86 บาท</div>
+              <div style="font-size:0.76rem; color:#fecdd3;">คิดจากอัตราต่อวัน ร้อยละ 0.10 ของมูลค่างานในสัญญา</div>
+            </div>
+
+            <div class="pen-pane" id="pen-box-10">
+              <div style="font-size:0.8rem; color:#fda4af;">ผิดสัญญารวม 10 วัน (10 × 21,812.97 บาท)</div>
+              <div style="font-size:1.75rem; font-weight:800; color:#ffffff; margin:0.25rem 0;">218,129.72 บาท</div>
+              <div style="font-size:0.76rem; color:#fecdd3;">คิดเป็นร้อยละ 1.00 ของมูลค่างานในสัญญา</div>
+            </div>
+
+            <div class="pen-pane" id="pen-box-sub">
+              <div style="font-size:0.8rem; color:#fda4af;">กรณีฝ่าฝืนนำงานไปจ้างช่วงโดยไม่ได้รับอนุญาตเป็นหนังสือ (ข้อ 10 วรรคสาม)</div>
+              <div style="font-size:1.55rem; font-weight:800; color:#ffffff; margin:0.25rem 0;">ปรับร้อยละ 10 ของวงเงินงานที่จ้างช่วง</div>
+              <div style="font-size:0.76rem; color:#fecdd3;">เช่น หากจ้างช่วงงานมูลค่า 1,000,000 บาท จะถูกปรับ 100,000 บาท และไม่ตัดสิทธิผู้ว่าจ้างในการบอกเลิกสัญญา</div>
+            </div>
+          </div>
+
+          <!-- Complete Summary Table of SLA & Conditions -->
+          <div class="bento-card col-12">
+            <div>
+              <div class="bento-label">📊 ตารางสรุปเปรียบเทียบเกณฑ์เวลา SLA ทั้งหมด (ข้อ 5.14)</div>
+              <div class="bento-title">ใช้สำหรับอ้างอิงในการตรวจรับรายงานรายเดือนของคณะกรรมการตรวจรับพัสดุ</div>
+            </div>
+            <table class="clean-table">
+              <thead>
+                <tr>
+                  <th>ประเภทครุภัณฑ์</th>
+                  <th>สถานที่ติดตั้ง</th>
+                  <th>เวลาวิเคราะห์สาเหตุ</th>
+                  <th>เวลาซ่อมเสร็จ / วางเครื่องสำรอง</th>
+                  <th>เพดานใช้เครื่องสำรอง (บังคับเปลี่ยนถาวร)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1. เครื่องคอมพิวเตอร์แม่ข่าย (Server)</strong></td>
+                  <td>ห้อง Data Center</td>
+                  <td>ภายใน 4 ชั่วโมง</td>
+                  <td><span class="tag-pill tag-pink">ภายใน 24 ชั่วโมง</span></td>
+                  <td>เกิน <strong>3 เดือน</strong> ต้องเปลี่ยนถาวร</td>
+                </tr>
+                <tr>
+                  <td rowspan="2"><strong>2. เครื่องคอมพิวเตอร์ลูกข่าย (All In One)</strong></td>
+                  <td>อาคารถนนรัชดาภิเษก, ศูนย์ราชการฯ แจ้งวัฒนะ (อาคารราชบุรีดิเรกฤทธิ์ & อาคาร C)</td>
+                  <td>ภายใน 4 ชั่วโมง</td>
+                  <td><span class="tag-pill tag-orange">ภายใน 48 ชั่วโมง</span></td>
+                  <td rowspan="2">เกิน <strong>2 เดือน</strong> ต้องเปลี่ยนถาวร</td>
+                </tr>
+                <tr>
+                  <td>สำนักงานอัยการอื่นๆ (ทั้งส่วนกลางจุดอื่นและส่วนภูมิภาคทั่วประเทศ)</td>
+                  <td>ภายใน 4 ชั่วโมง</td>
+                  <td><span class="tag-pill tag-blue">ภายใน 72 ชั่วโมง</span></td>
+                </tr>
+                <tr>
+                  <td rowspan="2"><strong>3. อุปกรณ์เครือข่าย (Network)</strong></td>
+                  <td>อาคารถนนรัชดาภิเษก, ศูนย์ราชการฯ แจ้งวัฒนะ (อาคารราชบุรีดิเรกฤทธิ์ & อาคาร C)</td>
+                  <td>ภายใน 4 ชั่วโมง</td>
+                  <td><span class="tag-pill tag-pink">ภายใน 24 ชั่วโมง</span></td>
+                  <td rowspan="2">เกิน <strong>1 เดือน</strong> ต้องเปลี่ยนถาวร</td>
+                </tr>
+                <tr>
+                  <td>สำนักงานอัยการอื่นๆ (ทั้งส่วนกลางจุดอื่นและส่วนภูมิภาคทั่วประเทศ)</td>
+                  <td>ภายใน 4 ชั่วโมง</td>
+                  <td><span class="tag-pill tag-blue">ภายใน 72 ชั่วโมง</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 5: PERSONNEL TEAM (ภาคผนวก ก)
+           ==================================================================== -->
+      <section class="tab-view" id="view-5">
+        <div class="bento-grid">
+          <div class="bento-card col-12">
+            <div>
+              <div class="bento-label">👥 ภาคผนวก ก — โครงสร้างทีมผู้เชี่ยวชาญประจำโครงการ (วันราชการ 08.30 – 17.00 น.)</div>
+              <div class="bento-title">บุคลากรหลักอย่างน้อย 8 คน + บุคลากรสำรองอย่างน้อยตำแหน่งละ 1 คน (รวมอย่างน้อย 13 คน ต้องส่งประวัติภายใน 15 วัน)</div>
+            </div>
+
+            <div class="infographic-steps" style="margin-top:1.1rem;">
+              <div class="info-node">
+                <div class="info-icon-circle" style="background:rgba(0,113,227,0.12); color:#0071e3; font-weight:800; font-size:1.15rem;">2+1</div>
+                <span class="tag-pill tag-blue">ตำแหน่งที่ 1</span>
+                <h4 style="margin:0.4rem 0;">Help Desk Support</h4>
+                <p class="bento-sub"><strong>หลัก ≥ 2 คน | สำรอง ≥ 1 คน</strong><br>• ปริญญาตรีทุกสาขา<br>• ประสบการณ์รับ-ตอบปัญหา ≥ 1 ปี<br>• รับแจ้งทางเว็บ/โทรศัพท์ แก้ปัญหาเบื้องต้น ออกเลข <strong>Call No.</strong></p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle" style="background:rgba(255,159,10,0.15); color:#b86b00; font-weight:800; font-size:1.15rem;">1+1</div>
+                <span class="tag-pill tag-orange">ตำแหน่งที่ 2</span>
+                <h4 style="margin:0.4rem 0;">IT Incident Officer</h4>
+                <p class="bento-sub"><strong>หลัก ≥ 1 คน | สำรอง ≥ 1 คน</strong><br>• ปริญญาตรีทุกสาขา<br>• ประสบการณ์ควบคุมติดตามปัญหา ≥ 1 ปี<br>• ติดตามความคืบหน้า แจ้ง Help Desk และผู้ใช้งานเมื่อซ่อมเสร็จ บันทึกเวลาปิดงาน</p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle" style="background:rgba(40,205,65,0.15); color:#198728; font-weight:800; font-size:1.15rem;">3+1</div>
+                <span class="tag-pill tag-green">ตำแหน่งที่ 3</span>
+                <h4 style="margin:0.4rem 0;">IT Support Officer</h4>
+                <p class="bento-sub"><strong>หลัก ≥ 3 คน | สำรอง ≥ 1 คน</strong><br>• ปริญญาตรีด้านคอมพิวเตอร์หรือเกี่ยวข้อง<br>• ประสบการณ์ซ่อมคอมพิวเตอร์/เครือข่าย/ซอฟต์แวร์ ≥ 3 ปี<br>• ตรวจสอบ วิเคราะห์ และลงมือซ่อมแซมแก้ไขจนใช้งานได้ปกติ</p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle" style="background:rgba(191,90,242,0.15); color:#7e22ce; font-weight:800; font-size:1.15rem;">1+1</div>
+                <span class="tag-pill tag-purple">ตำแหน่งที่ 4 • บังคับ Cert</span>
+                <h4 style="margin:0.4rem 0;">System Administrator</h4>
+                <p class="bento-sub"><strong>หลัก ≥ 1 คน | สำรอง ≥ 1 คน</strong><br>• ป.ตรี คอมพิวเตอร์/เกี่ยวข้อง, ประสบการณ์ ≥ 3 ปี<br>• <strong>Certificate:</strong> CompTIA (Linux+/Server+/Cloud+), Microsoft (MCSA/Windows Server Hybrid), Linux Foundation (LFCS), Cisco (CCNA) หรือ Huawei (HCIA)<br>• ดูแลแม่ข่าย, Storage, Backup, Crash Recovery, สำรอง Config ลง Log Book</p>
+              </div>
+
+              <div class="info-node">
+                <div class="info-icon-circle" style="background:rgba(255,55,95,0.14); color:#d61f4b; font-weight:800; font-size:1.15rem;">1+1</div>
+                <span class="tag-pill tag-pink">ตำแหน่งที่ 5 • บังคับ Cert</span>
+                <h4 style="margin:0.4rem 0;">Network Administrator</h4>
+                <p class="bento-sub"><strong>หลัก ≥ 1 คน | สำรอง ≥ 1 คน</strong><br>• ป.ตรี คอมพิวเตอร์/เกี่ยวข้อง, ประสบการณ์ ≥ 3 ปี<br>• <strong>Certificate:</strong> CompTIA (Network+/Security+), Cisco (CCNA/CCNP) หรือ Huawei (HCIA/HCIP)<br>• ดูแลเครือข่าย, ตรวจการเข้าถึงผิดปกติ (แจ้ง สทส. โดยเร็ว), จัดการ Network Traffic</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 6: COMMITTEE MEETING AGENDA (PURE CSS LIVE COUNTER)
+           ==================================================================== -->
+      <section class="tab-view" id="view-6">
+        <div class="bento-grid agenda-counter-scope">
+          <div class="bento-card col-12">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem; padding-bottom:0.85rem; border-bottom:1px solid var(--border-soft);">
+              <div>
+                <div class="bento-label">📋 สรุปวาระการประชุมคณะกรรมการตรวจรับพัสดุ</div>
+                <div class="bento-title">รายการตรวจสอบ 4 วาระหลัก (คลิกติ๊กเครื่องหมายถูกเพื่อบันทึกสถานะการตรวจรับได้ทันที)</div>
+              </div>
+              <div class="tag-pill tag-green css-live-counter" style="font-size:0.95rem; padding:0.45rem 1rem;"></div>
+            </div>
+
+            <h4 style="margin:0.6rem 0 0.5rem; color:var(--apple-blue);">📌 วาระที่ 1: เรื่องประธานแจ้งเพื่อทราบ (กรอบสัญญาและหลักเกณฑ์การตรวจรับ)</h4>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>1.1 รับทราบกรอบวงเงินและระยะเวลาสัญญา (ข้อ 6, 8, 9):</strong> วงเงินรวม 21,812,971.94 บาท ระยะเวลา 12 เดือน (1 ต.ค. 2569 – 30 ก.ย. 2570) ส่งมอบงานเป็นงวดรายเดือนภายในวันที่ 10 ของเดือนถัดไป</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>1.2 รับทราบอัตราค่าปรับและเงื่อนไขการจ้างช่วง (ข้อ 10):</strong> ผิดสัญญาปรับรายวันร้อยละ 0.10 ของมูลค่างานในสัญญา (21,812.97 บาท/วัน โดยเศษของชั่วโมงคิดเป็น 1 วัน) ห้ามจ้างช่วงเว้นแต่ได้รับอนุญาตเป็นหนังสือ (ฝ่าฝืนปรับร้อยละ 10 ของวงเงินงานที่จ้างช่วง)</div></label>
+
+            <h4 style="margin:1.2rem 0 0.5rem; color:#b86b00;">📌 วาระที่ 2: เรื่องเพื่อพิจารณาตรวจสอบระยะเริ่มสัญญา (ภายใน 15 วัน นับถัดจากวันลงนามในสัญญา)</h4>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>2.1 พิจารณาให้ความเห็นชอบแผนการทำงาน (ข้อ 5.1):</strong> ตรวจรับเอกสารอย่างน้อย 2 ชุด ได้แก่ แผนการทำงาน, แผนการบริหารโครงการ (Activity Plan), แผน PM, แผนวิเคราะห์ปัญหา และแผนสำรองฉุกเฉินพร้อมคู่มือ</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>2.2 ตรวจสอบคุณสมบัติและประวัติบุคลากร (ข้อ 5.2, 5.5 และภาคผนวก ก):</strong> ตรวจวุฒิปริญญาตรี ประสบการณ์ทำงาน และใบรับรอง Certificate ของทีมหลักอย่างน้อย 8 คน + บุคลากรสำรองอย่างน้อยตำแหน่งละ 1 คน และหนังสือแจ้งชื่อผู้ประสานงานประจำโครงการ</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>2.3 ตรวจรับแผนการใช้พัสดุที่ผลิตภายในประเทศ (ข้อ 11):</strong> ตรวจสอบการยื่นแผนการใช้พัสดุที่ผลิตภายในประเทศภายใน 15 วันนับถัดจากวันลงนามในสัญญา</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>2.4 ตรวจความพร้อมของระบบสนับสนุนทั้ง 4 ระบบและ Sticker (ข้อ 5.6–5.10, 5.36):</strong> ตรวจระบบ Web Helpdesk, ระบบฐานข้อมูลครุภัณฑ์, ระบบโทรศัพท์ IVR (บันทึกการสนทนาได้), ระบบ Monitoring เครือข่ายพร้อมจอ Smart TV LED ≥ 50 นิ้ว และการจัดทำ Sticker สีขาวระบุ QR Code</div></label>
+
+            <h4 style="margin:1.2rem 0 0.5rem; color:#198728;">📌 วาระที่ 3: เรื่องเพื่อพิจารณาตรวจรับงานงวดรายเดือน (งวดที่ 1–12 ส่งภายในวันที่ 10 ของเดือนถัดไป)</h4>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>3.1 ตรวจสอบกำหนดเวลาส่งมอบรายงานรายเดือน (ข้อ 9):</strong> ผู้รับจ้างส่งมอบงานและรายงานตามข้อ 5.19 ภายในวันที่ 10 ของเดือนถัดไปครบถ้วนตามกำหนด</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>3.2 ตรวจรายงานสรุปปัญหาและใบหลักฐานการเข้าให้บริการ (ข้อ 5.19 และ 5.27):</strong> ตรวจรายงานสรุปปัญหาที่แจ้งมาก, ตารางและกราฟสรุปปัญหา, จำนวนปัญหาแยกตามประเภทงาน และใบหลักฐานการเข้าบริการที่มีลายมือชื่อเจ้าหน้าที่ผู้รับจ้างและบุคลากร สอ.</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>3.3 ตรวจสอบการปฏิบัติตามเกณฑ์เวลา SLA และการวางเครื่องสำรอง (ข้อ 5.14 และ 5.19):</strong> ตรวจเวลาวิเคราะห์สาเหตุ (≤ 4 ชม.), เวลาซ่อมเสร็จหรือวางเครื่องสำรอง (≤ 24 / 48 / 72 ชม.) และการติดตามเครื่องสำรองไม่ให้ค้างเกินกำหนดเปลี่ยนถาวร (เครือข่าย 1 เดือน / ลูกข่าย 2 เดือน / แม่ข่าย 3 เดือน)</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>3.4 ตรวจรายงานประสิทธิภาพ Server & Network (ข้อ 5.17–5.19):</strong> ตรวจรายงานสรุปผลประสิทธิภาพการทำงานของเครื่องคอมพิวเตอร์แม่ข่ายและอุปกรณ์เครือข่าย</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>3.5 ตรวจตารางเวลาปฏิบัติงานบุคลากรและผลประเมินความพึงพอใจ (ข้อ 5.19 และภาคผนวก ก):</strong> ตรวจเวลาเข้างาน 08.30–17.00 น. การจัดคนสำรองแทนทันทีเมื่อคนหลักไม่มา และผลประเมินความพึงพอใจของผู้ใช้งาน</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>3.6 พิจารณาอนุมัติการตรวจรับและเบิกจ่ายเงินรายเดือน (ข้อ 9 และ 10):</strong> สรุปผลการตรวจรับ (หักค่าปรับกรณีผิดสัญญา ถ้ามี) เพื่ออนุมัติเบิกจ่ายเงินค่าจ้างรายเดือน</div></label>
+
+            <h4 style="margin:1.2rem 0 0.5rem; color:#d61f4b;">📌 วาระที่ 4: เรื่องเพื่อพิจารณาติดตามงานตามวงรอบพิเศษและการตรวจรับงวดสุดท้าย</h4>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>4.1 ตรวจการต่ออายุสิทธิ์การใช้งาน (License) เครื่องแม่ข่าย (ข้อ 5.11 และภาคผนวก ข ข้อ 1.1):</strong> ตรวจข้อเสนอต่อ License ของอุปกรณ์ Firewall Fortinet รุ่น FortiGate 400F (2 หน่วย) ล่วงหน้าอย่างน้อย 1 เดือนก่อนหมดอายุ</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>4.2 ตรวจผลการทำ PM และการลงพื้นที่ตรวจงานของคณะกรรมการฯ (ข้อ 5.11 และ 5.33):</strong> ติดตามผล PM ห้อง Data Center (3 ครั้ง) และทั่วประเทศ (1 ครั้ง) พร้อมกำหนดแผนเดินทางตรวจงานของคณะกรรมการฯ (อย่างน้อย 10 คน ไม่น้อยกว่า 5 ครั้ง ครั้งละไม่น้อยกว่า 3 วันทำการ)</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>4.3 ตรวจรับรายงานงวดสุดท้ายใน Thumb Drive อย่างน้อย 2 ชุด (ข้อ 5.20–5.24):</strong> ตรวจสอบไฟล์ PDF/Excel ครบทั้ง 5 รายการ ได้แก่ รายงานผล PM ทั่วประเทศพร้อมรูปถ่าย Sticker (5.20), จำนวนครุภัณฑ์แยกประเภท (5.21), ข้อมูลครุภัณฑ์ทั้งหมดในฐานข้อมูล (5.22), แผนผังตำแหน่งติดตั้ง (5.23) และ Network Diagram (5.24)</div></label>
+            <label class="apple-check-card"><input type="checkbox"> <div><strong>4.4 ตรวจรับคืนอุปกรณ์เดิมที่ถูกเปลี่ยนทดแทนถาวร (ข้อ 5.14.2):</strong> ตรวจสอบการส่งคืนอุปกรณ์เดิมที่ชำรุดและถูกเปลี่ยนเป็นเครื่องใหม่ถาวรให้แก่สำนักงานอัยการสูงสุดครบถ้วน</div></label>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</body>
+</html>
